@@ -12,6 +12,7 @@ Signal is a fictional infrastructure status starter for What Framework and Vura.
 
 - Node.js 22.x
 - npm 10+
+- After `npm ci`, install Playwright Chromium for browser verification: `npx playwright install chromium`
 - Vura credentials only when deploying with `deploy:vura`; local build and verify run offline.
 
 ## Run locally
@@ -38,6 +39,7 @@ npm run test:browser
 ```
 
 `npm run verify` runs the full local gate. Browser screenshots are saved under `test-results/screenshots`.
+On minimal Linux CI images that do not already include browser system libraries, use `npx playwright install --with-deps chromium` instead.
 
 ## Deploy on Vura
 
