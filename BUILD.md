@@ -17,6 +17,8 @@
 - The status product is intentionally fictional. The copy says this in the hero, API docs, and README so the demo does not imply real production telemetry.
 - The CSS is duplicated into `public/styles.css` because Vura serves public assets at runtime; a runtime stylesheet cannot import from private source paths.
 - Vura 0.8.3 requires `export const page` config values to be statically literal. Helper calls, dataset-derived identifiers, and template literals in page config are rejected during route scanning, so repeated single-line head strings are intentional. A follow-up browser pass also caught that escaped `\\n` inside head strings renders visibly; the fixed pages avoid escape sequences entirely.
+- Design/runtime review found the page components were expecting loader return values as top-level props, so the public UI printed `unknown` instead of proving SSR/cache timing. The fix imports `useLoaderData` from `@celsian/vura-core` in overview, incident, and snapshot pages, then renders compact ISO timestamps in product UI and keeps the implementation explanation on `/build`.
+- A hosted review also found `/styles.css` returning 404 on the deployed Vura URL while local Vura served `200 text/css`; the platform public-asset delivery fix is owned separately. Signal now has browser smoke coverage for local stylesheet status, content type, source token, and computed mono styling so the app cannot look like unstyled browser defaults in local verification.
 - The default `vura.config.ts` intentionally has no managed adapter. Local `npm run build` and `npm run verify` stay offline and require no Vura credentials. Publishing still uses the separate pinned `vura-platform@0.3.0` deploy scripts after root review.
 
 Before:

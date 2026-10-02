@@ -15,12 +15,14 @@ export default function BuildPage() {
       <div class="build-grid">
         <section class="panel">
           <h2>Server pages</h2>
-          <p><code>src/pages/index.tsx</code> exports <code>mode: 'server'</code>, <code>revalidate: 30</code>, and <code>tags</code>. Its loader returns a timestamp that should be reused inside the ISR window.</p>
+          <p><code>src/pages/index.tsx</code> exports <code>mode: 'server'</code>, <code>revalidate: 30</code>, and <code>tags</code>. Its loader returns a timestamp read with <code>useLoaderData</code>, so the product UI can show a real ISO render stamp instead of fallback copy.</p>
           <pre>{`export const page = {
   mode: 'server',
   revalidate: 30,
   tags: ['signal-overview']
-};`}</pre>
+};
+
+const { renderedAt } = useLoaderData<typeof loader>();`}</pre>
         </section>
         <section class="panel">
           <h2>Uncached SSR</h2>
@@ -41,6 +43,13 @@ head: '<meta ...>\\\\n<link ...>'
 
 // after: static and not visible
 head: '<meta ...> <link ...>'`}</pre>
+        </section>
+        <section class="panel">
+          <h2>Public CSS delivery check</h2>
+          <p>A hosted review found the deployed URL could return 404 for <code>/styles.css</code> even while local Vura served <code>200 text/css</code>. The platform asset fix is tracked outside this repo; this starter now keeps a browser smoke assertion for local CSS status, content type, and computed mono styling so regressions are caught before deploy.</p>
+          <pre>{`const css = await request.get('/styles.css');
+expect(css.status()).toBe(200);
+expect(css.headers()['content-type']).toContain('text/css');`}</pre>
         </section>
       </div>
     </Layout>

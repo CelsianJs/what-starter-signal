@@ -2,7 +2,7 @@
 
 ## Source of truth
 - Status: Active
-- Last refreshed: 2026-10-01
+- Last refreshed: 2026-10-02
 - Primary product surfaces: cached status overview, request-time snapshot, incident detail, health API, build notes.
 - Evidence reviewed: sibling `what-starters` conventions, Little Friend Vura server pages, Vura core README, What Framework README.
 
@@ -27,7 +27,7 @@
 - Content hierarchy: operational summary first, services second, incident timeline third, implementation proof last.
 
 ## Design principles
-- Principle 1: make runtime behavior visible in the page copy.
+- Principle 1: make runtime behavior visible in compact product UI, with deeper implementation mechanics on `/build`.
 - Principle 2: use fictional but concrete operations data.
 - Tradeoffs: visual density is acceptable because this represents an operator tool; copy stays explicit to avoid mistaking synthetic status for real production state.
 
@@ -68,14 +68,14 @@
 ## Content voice
 - Tone: precise, factual, operator calm.
 - Terminology: “cached server overview”, “private no-store server render”, “fictional infrastructure”.
-- Microcopy rules: never imply live production incidents; name Vura route behavior plainly.
+- Microcopy rules: never imply live production incidents; name Vura route behavior plainly on `/build` and keep product pages focused on useful render/cache stamps.
 
 ## Implementation constraints
 - Framework/styling system: What Framework JSX rendered by Vura pages; vanilla CSS.
 - Design-token constraints: local CSS variables only.
 - Performance constraints: no client bundle needed for primary pages; bounded JSON API.
 - Compatibility constraints: Node 22, Vura 0.8.3, What 0.13.10, Vura Platform CLI 0.3.0.
-- Test/screenshot expectations: Vitest data tests and Playwright desktop/mobile route/API/cache-flow smoke.
+- Test/screenshot expectations: Vitest data tests and Playwright desktop/mobile route/API/cache-flow smoke. Browser smoke must fail if `/styles.css` is not `200 text/css`, if computed body styling is default, or if loader timestamps fall back to `unknown`.
 
 ## Open questions
 - [ ] Root owner / deployment / choose the managed Vura project during publish; the default starter config stays adapter-free for offline builds.

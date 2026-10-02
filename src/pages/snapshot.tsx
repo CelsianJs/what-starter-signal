@@ -1,3 +1,4 @@
+import { useLoaderData } from '@celsian/vura-core';
 import { Layout } from '../components/Layout';
 import { healthSnapshot } from '../data/status';
 
@@ -12,7 +13,8 @@ export function loader() {
   return healthSnapshot();
 }
 
-export default function Snapshot(props: ReturnType<typeof healthSnapshot>) {
+export default function Snapshot() {
+  const props = useLoaderData<typeof loader>();
   return (
     <Layout section="snapshot">
       <p class="eyebrow">private no-store server render</p>

@@ -63,6 +63,7 @@ p { color: var(--muted); line-height: 1.65; }
 .timeline article { position: relative; }
 .timeline article::before { content: ""; position: absolute; left: -28px; top: 4px; width: 11px; height: 11px; background: var(--green); box-shadow: 0 0 20px var(--green); }
 .mono { color: var(--blue); font-variant-numeric: tabular-nums; }
+.fictional { color: var(--amber); }
 .snapshot-stamp { font-size: clamp(1.6rem, 4vw, 3.4rem); color: var(--green); word-break: break-all; }
 pre { overflow: auto; border: 1px solid var(--line); padding: 16px; background: #020303; color: var(--green); }
 .build-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }

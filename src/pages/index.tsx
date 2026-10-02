@@ -1,3 +1,4 @@
+import { useLoaderData } from '@celsian/vura-core';
 import { Layout } from '../components/Layout';
 import { incidents, services, statusSummary } from '../data/status';
 
@@ -17,7 +18,12 @@ export function loader() {
   };
 }
 
-export default function Overview({ renderedAt, summary }: { renderedAt?: string; summary?: ReturnType<typeof statusSummary> }) {
+function stamp(iso: string) {
+  return new Intl.DateTimeFormat('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit', timeZone: 'UTC', hour12: false }).format(new Date(iso));
+}
+
+export default function Overview() {
+  const { renderedAt, summary } = useLoaderData<typeof loader>();
   const totals = summary ?? statusSummary();
   return (
     <Layout>
@@ -26,14 +32,14 @@ export default function Overview({ renderedAt, summary }: { renderedAt?: string;
           <p class="eyebrow">cached server overview</p>
           <h1>{totals.headline}</h1>
           <p>
-            Signal Works is a fictional infrastructure status product. This overview is server rendered by Vura with
-            <code> revalidate: 30</code>, so repeat reads can reuse a cached render.
+            Signal Works is a fictional infrastructure status product for rehearsing calm incident communication without connecting to real telemetry.
           </p>
         </div>
         <aside class="panel">
-          <p class="eyebrow">render proof</p>
-          <p class="mono">{renderedAt ?? 'unknown'}</p>
-          <p>Fetch this page twice during the cache window and the timestamp should stay stable.</p>
+          <p class="eyebrow">render stamp</p>
+          <p class="mono">{stamp(renderedAt)} UTC</p>
+          <p>Cached overview · revalidates every 30 seconds · <time datetime={renderedAt}>{renderedAt}</time></p>
+          <p class="fictional">Fictional status data. No live provider is connected.</p>
         </aside>
       </section>
       <section class="summary-strip" aria-label="Status summary">

@@ -2,19 +2,32 @@ import { expect, test } from '@playwright/test';
 import { mkdirSync } from 'node:fs';
 
 test('server rendered pages and API respond', async ({ page, request }, testInfo) => {
+  const css = await request.get('/styles.css');
+  expect(css.status()).toBe(200);
+  expect(css.headers()['content-type']).toContain('text/css');
+  expect(await css.text()).toContain('--green');
+
   const html = await (await request.get('/')).text();
   expect(html).not.toContain('\\n');
+  expect(html).not.toContain('render proof unknown');
+  expect(html).toMatch(/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z/);
 
   await page.goto('/');
   await expect.poll(() => page.locator('body').innerText()).not.toContain('\\n');
   await expect(page.getByRole('heading', { name: /systems under watch/i })).toBeVisible();
   await expect(page.getByText('cached server overview')).toBeVisible();
+  await expect(page.getByText(/Cached overview · revalidates every 30 seconds/i)).toBeVisible();
+  await expect(page.getByText(/unknown/i)).toHaveCount(0);
+  await expect.poll(() => page.evaluate(() => getComputedStyle(document.body).fontFamily)).toMatch(/mono|Menlo|Consolas|Plex/i);
+  await expect.poll(() => page.evaluate(() => getComputedStyle(document.body).backgroundColor)).not.toBe('rgba(0, 0, 0, 0)');
   await expectNoHorizontalOverflow(page);
   mkdirSync('test-results/screenshots', { recursive: true });
   await page.screenshot({ path: `test-results/screenshots/signal-overview-${testInfo.project.name}.png`, fullPage: true });
 
   await page.goto('/incidents/aurora-latency');
   await expect(page.getByRole('heading', { name: /elevated event ingestion latency/i })).toBeVisible();
+  await expect(page.getByText(/Rendered .*cached for 45-second incident-read bursts/)).toBeVisible();
+  await expect(page.getByText(/unknown/i)).toHaveCount(0);
   await expectNoHorizontalOverflow(page);
   await page.screenshot({ path: `test-results/screenshots/signal-incident-${testInfo.project.name}.png`, fullPage: true });
 

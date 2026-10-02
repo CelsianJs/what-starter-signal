@@ -1,3 +1,4 @@
+import { useLoaderData } from '@celsian/vura-core';
 import { Layout } from '../../components/Layout';
 import { findIncident } from '../../data/status';
 
@@ -19,7 +20,8 @@ export function loader() {
   };
 }
 
-export default function IncidentPage({ renderedAt, incident: current = incident }: { renderedAt?: string; incident?: typeof incident }) {
+export default function IncidentPage() {
+  const { renderedAt, incident: current = incident } = useLoaderData<typeof loader>();
   if (!current) return <Layout><h1>Incident missing.</h1></Layout>;
   return (
     <Layout section="incident">
@@ -43,7 +45,8 @@ export default function IncidentPage({ renderedAt, incident: current = incident 
           ))}
         </div>
       </section>
-      <p class="mono">Rendered {renderedAt ?? 'unknown'}; cached for short incident-read bursts.</p>
+      <p class="mono">Rendered <time datetime={renderedAt}>{renderedAt}</time>; cached for 45-second incident-read bursts.</p>
+      <p>Fictional status data. This route demonstrates cached incident detail rendering, not live monitoring.</p>
     </Layout>
   );
 }
