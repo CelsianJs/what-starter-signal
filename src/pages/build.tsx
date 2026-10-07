@@ -14,6 +14,17 @@ export default function BuildPage() {
       <h1>How Signal uses What + Vura.</h1>
       <div class="build-grid">
         <section class="panel">
+          <h2>Every incident needs a real route</h2>
+          <p>The overview listed two fictional incidents but only the ingestion incident had a page. Both <code>aurora-latency.tsx</code> and <code>webhook-retry-spike.tsx</code> now export literal server-page configs and loaders. They share <code>IncidentDetail</code> for facts and timeline rendering; the second route is no longer a dead end.</p>
+          <pre>{`export function loader() {
+  return { renderedAt: new Date().toISOString(),
+    incident: findIncident('webhook-retry-spike') };
+}
+
+const { incident, renderedAt } = useLoaderData<typeof loader>();`}</pre>
+          <p>Add a concrete page for each bundled incident, keep config literals static, and browser-test every overview link plus CSS and cached/private render stamps before deploying.</p>
+        </section>
+        <section class="panel">
           <h2>Server pages</h2>
           <p><code>src/pages/index.tsx</code> exports <code>mode: 'server'</code>, <code>revalidate: 30</code>, and <code>tags</code>. Its loader returns a timestamp read with <code>useLoaderData</code>, so the product UI can show a real ISO render stamp instead of fallback copy.</p>
           <pre>{`export const page = {

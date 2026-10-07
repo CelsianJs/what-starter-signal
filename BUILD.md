@@ -62,4 +62,10 @@ await expect.poll(() => page.locator('body').innerText()).not.toContain('\\n');
 
 - Cache behavior is verified against the local Vura Node runtime before root deployment. Distributed platform invalidation is not claimed here.
 - The health API is deliberately bounded and read-only; it is not a monitoring ingestion service.
-- There is one incident detail route. Add more concrete files or a verified dynamic route pattern before expanding.
+- Both bundled incidents have concrete detail routes and share `src/components/IncidentDetail.tsx`. Add another concrete page or a verified dynamic route pattern before expanding the dataset.
+
+## Complete incident routes
+
+The second active incident used to link to a 404 because its bundled data had no page. `src/pages/incidents/webhook-retry-spike.tsx` now has literal server-page configuration with 45-second caching and a loader read through `useLoaderData`. The ingestion and webhook routes share facts/timeline rendering. The browser suite visits both details while retaining CSS, real loader stamp and cached-versus-private snapshot assertions.
+
+Smooth path: keep page configs statically literal, put request data in loaders, add a concrete route for every overview href, and test the full dataset's links. Timeline dates are fictional October 1, 2026 fixtures; nothing connects to real provider telemetry.

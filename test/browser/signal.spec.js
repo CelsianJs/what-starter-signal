@@ -31,6 +31,11 @@ test('server rendered pages and API respond', async ({ page, request }, testInfo
   await expectNoHorizontalOverflow(page);
   await page.screenshot({ path: `test-results/screenshots/signal-incident-${testInfo.project.name}.png`, fullPage: true });
 
+  await page.goto('/incidents/webhook-retry-spike');
+  await expect(page.getByRole('heading', { name: 'Retry volume above normal for signed webhooks' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Notified', exact: true })).toBeVisible();
+  await expectNoHorizontalOverflow(page);
+
   const health = await request.get('/api/health');
   expect(health.ok()).toBeTruthy();
   expect(await health.json()).toMatchObject({ feature: 'bounded-health-api', fictional: true });
@@ -53,11 +58,12 @@ test('uncached snapshot changes while ISR overview is stable inside the window',
 });
 
 async function expectNoHorizontalOverflow(page) {
+  const viewportWidth = page.viewportSize().width;
   const sizes = await page.evaluate(() => ({
     scrollWidth: document.documentElement.scrollWidth,
     bodyScrollWidth: document.body.scrollWidth,
     innerWidth: window.innerWidth,
   }));
-  expect(sizes.scrollWidth, `document overflow on ${page.url()}`).toBeLessThanOrEqual(sizes.innerWidth);
-  expect(sizes.bodyScrollWidth, `body overflow on ${page.url()}`).toBeLessThanOrEqual(sizes.innerWidth);
+  expect(sizes.scrollWidth, `document overflow on ${page.url()}`).toBeLessThanOrEqual(viewportWidth);
+  expect(sizes.bodyScrollWidth, `body overflow on ${page.url()}`).toBeLessThanOrEqual(viewportWidth);
 }
