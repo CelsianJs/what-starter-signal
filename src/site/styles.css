@@ -75,3 +75,5 @@ code { color: var(--blue); }
   .incident-card { grid-template-columns: 1fr; }
   h1 { font-size: clamp(2rem, 11vw, 2.35rem); max-width: 11ch; }
 }
+.build-grid > * { min-width: 0; }
+.build-grid pre { max-width: 100%; white-space: pre-wrap; overflow-wrap: anywhere; }

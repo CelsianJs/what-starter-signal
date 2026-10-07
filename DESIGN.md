@@ -2,7 +2,7 @@
 
 ## Source of truth
 - Status: Active
-- Last refreshed: 2026-10-02
+- Last refreshed: 2026-10-07
 - Primary product surfaces: cached status overview, request-time snapshot, incident detail, health API, build notes.
 - Evidence reviewed: sibling `what-starters` conventions, Little Friend Vura server pages, Vura core README, What Framework README.
 
@@ -76,6 +76,11 @@
 - Performance constraints: no client bundle needed for primary pages; bounded JSON API.
 - Compatibility constraints: Node 22, Vura 0.8.3, What 0.13.10, Vura Platform CLI 0.3.0.
 - Test/screenshot expectations: Vitest data tests and Playwright desktop/mobile route/API/cache-flow smoke. Browser smoke must fail if `/styles.css` is not `200 text/css`, if computed body styling is default, or if loader timestamps fall back to `unknown`.
+
+## Complete incident navigation
+- Every bundled active incident has a concrete server-rendered detail route with literal page configuration and 45-second cache semantics.
+- Shared incident facts/timeline rendering keeps ingestion and webhook details consistent; an All incidents backlink closes the detail path.
+- Timeline dates explicitly identify the fictional October 1, 2026 scenario. Real render stamps and cached/private request behavior remain separate from synthetic operations data.
 
 ## Open questions
 - [ ] Root owner / deployment / choose the managed Vura project during publish; the default starter config stays adapter-free for offline builds.
