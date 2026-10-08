@@ -2,12 +2,12 @@
 
 ## Source of truth
 - Status: Active
-- Last refreshed: 2026-10-07
+- Last refreshed: 2026-10-08
 - Primary product surfaces: cached status overview, request-time snapshot, incident detail, health API, build notes.
 - Evidence reviewed: sibling `what-starters` conventions, Little Friend Vura server pages, Vura core README, What Framework README.
 
 ## Brand
-- Personality: severe, operator-grade, high-contrast, infrastructure-console minimalism.
+- Personality: calm, operator-grade, readable infrastructure-status minimalism.
 - Trust signals: timestamps, service budgets, incident timelines, explicit fictional data label.
 - Avoid: real-provider claims, toy dashboards, purple SaaS gradients, fake telemetry language.
 
@@ -32,10 +32,10 @@
 - Tradeoffs: visual density is acceptable because this represents an operator tool; copy stays explicit to avoid mistaking synthetic status for real production state.
 
 ## Visual language
-- Color: black/green terminal base with amber warning and blue timestamp accents.
-- Typography: monospace console voice for operator trust.
-- Spacing/layout rhythm: dense cards and grid strips; large compressed hero headline.
-- Shape/radius/elevation: rectangular panels, hairline borders, deep black shadows.
+- Color: dark graphite/green base with amber warning and blue timestamp accents.
+- Typography: Local humanist sans for headings, body and navigation; timestamps, budgets and code remain monospace.
+- Spacing/layout rhythm: measured status rows and grid strips; bounded, readable headline.
+- Shape/radius/elevation: 8px panel corners and subtle borders; no decorative glow or deep shadows.
 - Motion: essentially static; operators should not fight motion during incidents.
 - Imagery/iconography: text-first, small geometric signal mark only.
 
@@ -54,7 +54,7 @@
 
 ## Responsive behavior
 - Supported breakpoints/devices: desktop, tablet, mobile.
-- Layout adaptations: hero, metrics, service grids, build notes collapse to one column.
+- Layout adaptations: hero, service grids and build notes collapse to one column; the compact three-count summary stays together. Mobile primary navigation uses an intentional two-by-two grid of 44px targets, and incident facts stack to fit their full labels.
 - Touch/hover differences: links remain text-based; hover color is decorative only.
 
 ## Interaction states
@@ -84,3 +84,11 @@
 
 ## Open questions
 - [ ] Root owner / deployment / choose the managed Vura project during publish; the default starter config stays adapter-free for offline builds.
+
+## Shared modern chrome contract
+
+- Typography: "Avenir Next", "Segoe UI Variable", "Segoe UI", sans-serif; no font downloads. Body 16px/1.6, labels and controls 14px. Monospace is limited to code and structured readouts.
+- Hierarchy: prose, build and detail headings stay within 36–44px on desktop and 28–32px on mobile. The home composition follows the same bounded hierarchy while preserving its primary art, instrument, gear or data surface.
+- Geometry: 8px spacing rhythm, restrained 8px control corners, at least 44px interactive control height, visible two-pixel focus outlines, explicit selected/disabled states.
+- Surfaces: flat theme backgrounds, solid content surfaces, subtle borders; no global decorative grids, repeating textures, heavy shadows or control pills.
+- Ownership: this is a presentation pass. Existing generation, audio, quote/receipt and server-render/cache contracts remain unchanged.

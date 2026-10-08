@@ -57,7 +57,7 @@ head: '<meta ...> <link ...>'`}</pre>
         </section>
         <section class="panel">
           <h2>Public CSS delivery check</h2>
-          <p>A hosted review found the deployed URL could return 404 for <code>/styles.css</code> even while local Vura served <code>200 text/css</code>. The platform asset fix is tracked outside this repo; this starter now keeps a browser smoke assertion for local CSS status, content type, and computed mono styling so regressions are caught before deploy.</p>
+          <p>A hosted review found the deployed URL could return 404 for <code>/styles.css</code> even while local Vura served <code>200 text/css</code>. The platform asset fix is tracked outside this repo; this starter now keeps browser smoke assertions for local CSS status, content type, humanist body typography and monospace readouts so regressions are caught before deploy.</p>
           <pre>{`const css = await request.get('/styles.css');
 expect(css.status()).toBe(200);
 expect(css.headers()['content-type']).toContain('text/css');`}</pre>
