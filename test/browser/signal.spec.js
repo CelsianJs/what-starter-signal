@@ -18,7 +18,8 @@ test('server rendered pages and API respond', async ({ page, request }, testInfo
   await expect(page.getByText('cached server overview')).toBeVisible();
   await expect(page.getByText(/Cached overview · revalidates every 30 seconds/i)).toBeVisible();
   await expect(page.getByText(/unknown/i)).toHaveCount(0);
-  await expect.poll(() => page.evaluate(() => getComputedStyle(document.body).fontFamily)).toMatch(/mono|Menlo|Consolas|Plex/i);
+  await expect.poll(() => page.evaluate(() => getComputedStyle(document.body).fontFamily)).toMatch(/Avenir|Segoe/i);
+  await expect.poll(() => page.locator('.mono').first().evaluate((node) => getComputedStyle(node).fontFamily)).toMatch(/mono|Menlo/i);
   await expect.poll(() => page.evaluate(() => getComputedStyle(document.body).backgroundColor)).not.toBe('rgba(0, 0, 0, 0)');
   await expectNoHorizontalOverflow(page);
   mkdirSync('test-results/screenshots', { recursive: true });
@@ -55,6 +56,48 @@ test('uncached snapshot changes while ISR overview is stable inside the window',
   await new Promise((resolve) => setTimeout(resolve, 25));
   const secondSnapshot = await (await request.get('/snapshot')).text();
   expect(secondSnapshot).not.toBe(firstSnapshot);
+});
+
+test('modern status chrome remains readable without client JavaScript', async ({ browser }) => {
+  const context = await browser.newContext({ javaScriptEnabled: false, viewport: { width: 390, height: 844 } });
+  const page = await context.newPage();
+  for (const route of ['/', '/incidents/aurora-latency', '/incidents/webhook-retry-spike', '/snapshot', '/build', '/404']) {
+    await page.goto(`http://127.0.0.1:4751${route}`);
+    await expect(page.locator('h1')).toBeVisible();
+    const styles = await page.evaluate(() => ({
+      family: getComputedStyle(document.body).fontFamily,
+      bodySize: parseFloat(getComputedStyle(document.body).fontSize),
+      background: getComputedStyle(document.body).backgroundImage,
+      heading: parseFloat(getComputedStyle(document.querySelector('h1')).fontSize),
+      targets: [...document.querySelectorAll('.brand, nav a')].map((node) => node.getBoundingClientRect().height),
+      brandDisplay: getComputedStyle(document.querySelector('.brand')).display,
+      navColumns: getComputedStyle(document.querySelector('nav')).gridTemplateColumns.split(' ').length,
+      navGeometry: [...document.querySelectorAll('nav a')].map((node) => {
+        const box = node.getBoundingClientRect();
+        return { top: Math.round(box.top), left: Math.round(box.left), bottom: Math.round(box.bottom) };
+      }),
+      codeScrolling: [...document.querySelectorAll('pre')].every((node) => ['auto', 'scroll'].includes(getComputedStyle(node).overflowX)),
+    }));
+    expect(styles.family).toMatch(/Avenir|Segoe/);
+    expect(styles.bodySize).toBe(16);
+    expect(styles.background).toBe('none');
+    expect(styles.heading).toBeLessThanOrEqual(32);
+    expect(styles.targets.every((height) => height >= 44)).toBeTruthy();
+    expect(styles.brandDisplay).toBe('inline-flex');
+    expect(styles.navColumns).toBe(2);
+    expect(styles.navGeometry).toHaveLength(4);
+    const [first, second, third, fourth] = styles.navGeometry;
+    expect(first.top).toBe(second.top);
+    expect(third.top).toBe(fourth.top);
+    expect(first.left).toBe(third.left);
+    expect(second.left).toBe(fourth.left);
+    expect(third.top).toBeGreaterThanOrEqual(first.bottom);
+    expect(styles.codeScrolling).toBeTruthy();
+    const clippedFacts = await page.locator('.metric strong').evaluateAll((nodes) => nodes.some((node) => node.scrollWidth > node.clientWidth));
+    expect(clippedFacts, `clipped status fact on ${route}`).toBeFalsy();
+    await expectNoHorizontalOverflow(page);
+  }
+  await context.close();
 });
 
 async function expectNoHorizontalOverflow(page) {

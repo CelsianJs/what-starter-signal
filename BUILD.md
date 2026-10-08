@@ -69,3 +69,7 @@ await expect.poll(() => page.locator('body').innerText()).not.toContain('\\n');
 The second active incident used to link to a 404 because its bundled data had no page. `src/pages/incidents/webhook-retry-spike.tsx` now has literal server-page configuration with 45-second caching and a loader read through `useLoaderData`. The ingestion and webhook routes share facts/timeline rendering. The browser suite visits both details while retaining CSS, real loader stamp and cached-versus-private snapshot assertions.
 
 Smooth path: keep page configs statically literal, put request data in loaders, add a concrete route for every overview href, and test the full dataset's links. Timeline dates are fictional October 1, 2026 fixtures; nothing connects to real provider telemetry.
+
+## Presentation contract
+
+The stylesheet uses local Avenir/Segoe sans fallbacks, 16px body copy, 14px labels and controls, bounded build/detail headings, and 44px controls. Code and structured readouts keep their monospace role. Theme identity comes from the real art, instrument, gear or status data rather than decorative page texture. Browser checks assert this contract alongside the existing behavior tests. Keep source/public CSS synchronized where server-rendered packaging requires it.
